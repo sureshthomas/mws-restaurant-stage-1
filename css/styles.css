@@ -3,6 +3,16 @@
 
 @media screen and (min-width: 300px) {
 
+  html{
+    font-size: 70%;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+  *,*:before, *:after{
+    box-sizing: inherit;
+  }
+
   body, td, th, p {
     font-family: Arial, Helvetica, sans-serif;
     font-size: 1.5rem;
@@ -34,7 +44,7 @@
   }
 
   a img {
-    border: none 0px #fff;
+    border: none 0 #fff;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -46,7 +56,7 @@
     display: block;
   }
 
-  #maincontent {
+  #maincontent  {
     background-color: #f3f3f3;
     min-height: 100%;
   }
@@ -227,10 +237,7 @@
   .inside #map-container {
     background: blue none repeat scroll 0 0;
     height: 60vh;
-    /*position: fixed;*/
-    right: 0;
-    top: 80px;
-    width: 50%;
+    width: 100%;
   }
 
   .inside #map {
@@ -242,18 +249,18 @@
   .inside #footer {
     bottom: 0;
     position: absolute;
-    width: 50%;
+    overflow: hidden;
   }
 
   #restaurant-name {
     color: #f18200;
     font-family: Arial, sans-serif;
-    font-size: 5.0rem;
+    font-size: 2.5rem;
     font-weight: 100;
     letter-spacing: 0;
-    margin: 15px 5px 30px;
+    margin: 15px 0 30px;
     text-transform: uppercase;
-    line-height: 0.8;
+    line-height: 1.1;
   }
 
   #restaurant-img {
@@ -282,7 +289,6 @@
     border-bottom: 1px solid #d9d9d9;
     border-top: 1px solid #fff;
     padding: 140px 40px 30px;
-    width: 50vw;
   }
 
   #reviews-container {
@@ -311,11 +317,24 @@
     overflow: hidden;
     padding: 0 20px 20px;
     position: relative;
-    width: 85%;
   }
 
   #reviews-list li p {
-    margin: 0 0 10px;
+    margin: 10px 0 5px;
+  }
+
+  #reviews-list .review-name {
+    font-size: 2rem;
+    display: inline-block;
+  }
+  #reviews-list .review-date {
+    font-size: 1.8rem;
+    color: #666;
+    float: right;
+  }
+  #reviews-list .review-rating {
+    font-size: 2rem;
+    color: #b05e00;
   }
 
   #restaurant-hours td {
