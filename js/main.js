@@ -1,7 +1,7 @@
 let restaurants,
   neighborhoods,
   cuisines
-var newMap
+var  newMap
 var markers = []
 
 const mapBoxKey = 'pk.eyJ1Ijoic3Rob21hODc5OTMiLCJhIjoiY2p0Z2cweHU5MDB0czQ0a2ljMnBlNzR1MSJ9.J6OE6a0hEzc7fsdHHh3Yrg'
