@@ -3,12 +3,13 @@
  *
  */
 
-const version = "1.0.0";
+const version = "1.0.8";
 const cacheName = `restaurent-${version}`;
+
 self.addEventListener('install', e => {
     e.waitUntil(
-        caches.open(cacheName).then(cache => {
-            return cache.addAll([
+        caches.open(cacheName)
+            .then(cache => cache.addAll([
                 `/`,
                 `/favicon.ico`,
                 `/index.html`,
@@ -30,10 +31,14 @@ self.addEventListener('install', e => {
                 `/js/dbhelper.js`,
                 `/js/main.js`,
                 `/js/restaurant_info.js`
-            ])
-                .then(() => self.skipWaiting());
-        })
+            ]))
     );
+});
+
+self.addEventListener('message', function(event) {
+    if (event.data.action === 'skipWaiting') {
+        self.skipWaiting();
+    }
 });
 
 self.addEventListener('activate', event => {
@@ -61,8 +66,4 @@ self.addEventListener('fetch', function(event) {
 });
 
 
-self.addEventListener('message', function(event) {
-    if (event.data.action === 'skipWaiting') {
-        self.skipWaiting();
-    }
-});
+
