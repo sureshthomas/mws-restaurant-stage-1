@@ -6,6 +6,18 @@ var markers = []
 
 const mapBoxKey = 'pk.eyJ1Ijoic3Rob21hODc5OTMiLCJhIjoiY2p0Z2cweHU5MDB0czQ0a2ljMnBlNzR1MSJ9.J6OE6a0hEzc7fsdHHh3Yrg'
 
+//Register service worker
+
+if('serviceWorker' in navigator) {
+  navigator.serviceWorker
+      .register('/sw.js')
+      .then(function() { console.log("Service Worker Registered"); })
+      .catch(function (error) {
+        console.log("Service work failed to register", error);});
+}
+
+
+
 
 /**
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
