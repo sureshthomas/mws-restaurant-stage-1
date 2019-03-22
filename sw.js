@@ -6,6 +6,7 @@
 const version = "1.2.8";
 const cacheName = `restaurent-${version}`;
 
+// No javascript files are cached
 self.addEventListener('install', e => {
     e.waitUntil(
         caches.open(cacheName)
@@ -38,10 +39,12 @@ self.addEventListener('message', function(event) {
     }
 });
 
+//activate
 self.addEventListener('activate', event => {
     event.waitUntil(self.clients.claim());
 });
 
+//fetch
 self.addEventListener('fetch', function(event) {
     event.respondWith(
         // Try the cache

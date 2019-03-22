@@ -4,11 +4,10 @@ let restaurants,
 var newMap
 var markers = []
 
+//Key is cached into a variable
 const mapBoxKey = 'pk.eyJ1Ijoic3Rob21hODc5OTMiLCJhIjoiY2p0Z2cweHU5MDB0czQ0a2ljMnBlNzR1MSJ9.J6OE6a0hEzc7fsdHHh3Yrg'
 
-
-let newSW;
-
+// Shows little page update
 function showUpdateBar() {
     console.log('Updater is being shown');
     let updateBar = document.getElementById('notification');
@@ -16,14 +15,10 @@ function showUpdateBar() {
 
 }
 
-// The click event on the notification
-document.getElementById('reload').addEventListener('click', function () {
-    newSW.postMessage({action: 'skipWaiting'});
-});
 
-//Register service worker
+//Users are given a choice to update the page
 
-function _updateReady(worker) {
+function updateReady(worker) {
 
     showUpdateBar();
     // The click event on the notification
@@ -33,17 +28,21 @@ function _updateReady(worker) {
 
 
 }
-
-function _trackInstalling(worker) {
+//Check the install Status
+function trackInstalling(worker) {
 
     worker.addEventListener('statechange', function() {
         if (worker.state == 'installed') {
-            _updateReady(worker);
+            updateReady(worker);
         }
     });
 
 }
 
+
+/****
+ * //Register service worker
+ */
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/sw.js').then(reg => {
         if (!navigator.serviceWorker.controller) {
@@ -52,17 +51,17 @@ if ('serviceWorker' in navigator) {
 
 
         if (reg.waiting) {
-            _updateReady(reg.waiting);
+            updateReady(reg.waiting);
             return;
         }
 
         if (reg.installing) {
-            _trackInstalling(reg.installing);
+            trackInstalling(reg.installing);
             return;
         }
 
         reg.addEventListener('updatefound', function () {
-            _trackInstalling(reg.installing);
+            trackInstalling(reg.installing);
             return;
         });
     });
@@ -234,6 +233,7 @@ createRestaurantHTML = (restaurant) => {
     const image = document.createElement('img');
     image.className = 'restaurant-img';
     image.src = DBHelper.imageUrlForRestaurant(restaurant);
+    image.setAttribute('alt', `Photo of ${restaurant.name}`);
     li.append(image);
 
     const name = document.createElement('h1');
@@ -272,15 +272,6 @@ addMarkersToMap = (restaurants = self.restaurants) => {
         self.markers.push(marker);
     });
 
-}
-/* addMarkersToMap = (restaurants = self.restaurants) => {
-  restaurants.forEach(restaurant => {
-    // Add marker to the map
-    const marker = DBHelper.mapMarkerForRestaurant(restaurant, self.map);
-    google.maps.event.addListener(marker, 'click', () => {
-      window.location.href = marker.url
-    });
-    self.markers.push(marker);
-  });
-} */
+};
+
 
