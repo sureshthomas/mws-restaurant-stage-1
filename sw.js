@@ -3,7 +3,7 @@
  *
  */
 
-const version = "1.0.8";
+const version = "1.2.8";
 const cacheName = `restaurent-${version}`;
 
 self.addEventListener('install', e => {
@@ -27,10 +27,7 @@ self.addEventListener('install', e => {
                 `/img/7.jpg`,
                 `/img/8.jpg`,
                 `/img/9.jpg`,
-                `/img/10.jpg`,
-                `/js/dbhelper.js`,
-                `/js/main.js`,
-                `/js/restaurant_info.js`
+                `/img/10.jpg`
             ]))
     );
 });

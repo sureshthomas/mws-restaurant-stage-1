@@ -10,8 +10,10 @@ const mapBoxKey = 'pk.eyJ1Ijoic3Rob21hODc5OTMiLCJhIjoiY2p0Z2cweHU5MDB0czQ0a2ljMn
 let newSW;
 
 function showUpdateBar() {
-    let snackbar = document.getElementById('notification');
-    snackbar.className = 'show';
+    console.log('Updater is being shown');
+    let updateBar = document.getElementById('notification');
+    updateBar.className = 'show';
+
 }
 
 // The click event on the notification
@@ -21,84 +23,58 @@ document.getElementById('reload').addEventListener('click', function () {
 
 //Register service worker
 
+function _updateReady(worker) {
+
+    showUpdateBar();
+    // The click event on the notification
+    document.getElementById('reload').addEventListener('click', function () {
+        worker.postMessage({action: 'skipWaiting'});
+    });
+
+
+}
+
+function _trackInstalling(worker) {
+
+    worker.addEventListener('statechange', function() {
+        if (worker.state == 'installed') {
+            _updateReady(worker);
+        }
+    });
+
+}
+
 if ('serviceWorker' in navigator) {
-    navigator.serviceWorker
-        .register('/sw.js')
-        .then(function (reg) {
-            console.log("Service Worker Registered");
+    navigator.serviceWorker.register('/sw.js').then(reg => {
+        if (!navigator.serviceWorker.controller) {
+            return;
+        }
 
-            reg.addEventListener('updatefound', () => {
-                //installing
-                newSW = reg.installing;
-                newSW.addEventListener('statechange', () => {
-                    //Check whether service worker state changed
-                    switch (newSW.state) {
-                        case "installed":
-                            if (navigator.serviceWorker.controller) {
-                                showUpdateBar();
-                            }
-                            //when no update available
-                            break;
-                    }
 
-                });
-            });
-        })
-        .catch(function (error) {
-            console.log("Service work failed to register", error);
+        if (reg.waiting) {
+            _updateReady(reg.waiting);
+            return;
+        }
+
+        if (reg.installing) {
+            _trackInstalling(reg.installing);
+            return;
+        }
+
+        reg.addEventListener('updatefound', function () {
+            _trackInstalling(reg.installing);
+            return;
         });
+    });
+
     let refreshing;
     navigator.serviceWorker.addEventListener('controllerchange', function () {
         if (refreshing) return;
         window.location.reload();
         refreshing = true;
-
     });
-}
-//https://deanhume.com/displaying-a-new-version-available-progressive-web-app/
+};
 
-
-/*
-// make the whole serviceworker process into a promise so later on we can
-// listen to it and in case new content is available a toast will be shown
-
-window.isUpdateAvailable = new Promise(function (resolve, reject) {
-
-    navigator.serviceWorker.register('/sw.js')
-        .then(reg => {
-            reg.onupdatefound = () => {
-                const installingWorker = reg.installing;
-                installingWorker.onstatechange = () => {
-                    switch (installingWorker.state) {
-                        case 'installed':
-                            if (navigator.serviceWorker.controller) {
-                                // new update available
-                                resolve(true);
-                            } else {
-                                // no update available
-                                resolve(false);
-                            }
-                            break;
-                    }
-                };
-            };
-        })
-        .catch(err => console.error('[SW ERROR]', err));
-});
-
-// listen to the service worker promise in index.html to see if there has been a new update.
-// condition: the service-worker.js needs to have some kind of change - e.g. increment CACHE_VERSION.
-window['isUpdateAvailable']
-    .then(isAvailable => {
-        if (isAvailable) {
-
-            console.log('New version available ');
-
-        } else {
-            console.log('New version available ');
-        }
-    });
-*/
 
 
 /**
@@ -122,7 +98,7 @@ fetchNeighborhoods = () => {
             fillNeighborhoodsHTML();
         }
     });
-}
+};
 
 /**
  * Set neighborhoods HTML.
@@ -163,7 +139,7 @@ fillCuisinesHTML = (cuisines = self.cuisines) => {
         option.value = cuisine;
         select.append(option);
     });
-}
+};
 
 /**
  * Initialize leaflet map, called from HTML.
@@ -219,7 +195,7 @@ updateRestaurants = () => {
             fillRestaurantsHTML();
         }
     })
-}
+};
 
 /**
  * Clear current restaurants, their HTML and remove their map markers.
@@ -247,7 +223,7 @@ fillRestaurantsHTML = (restaurants = self.restaurants) => {
         ul.append(createRestaurantHTML(restaurant));
     });
     addMarkersToMap();
-}
+};
 
 /**
  * Create restaurant HTML.
