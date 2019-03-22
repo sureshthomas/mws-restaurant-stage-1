@@ -3,7 +3,7 @@
  *
  */
 
-const version = "1.2.8";
+const version = "1.2.14";
 const cacheName = `restaurent-${version}`;
 
 // No javascript files are cached
@@ -48,9 +48,9 @@ self.addEventListener('activate', event => {
 self.addEventListener('fetch', function(event) {
     event.respondWith(
         // Try the cache
-        caches.match(event.request).then(function(response) {
+        caches.match(event.request,{ignoreSearch:true}).then(function(response) {
             if (response) {
-                return response;
+                return response|| fetch(event.request);
             }
             return fetch(event.request).then(function(response) {
                 if (response.status === 404) {
@@ -58,9 +58,11 @@ self.addEventListener('fetch', function(event) {
                 }
                 return response
             });
-        }).catch(function() {
+        }).catch(function(error) {
             // If both fail, show a generic fallback:
-            return caches.match('/offline.html');
+            console.error('Fetch failed; returning offline page instead.', error);
+
+            return caches.match('/offline.html', {ignoreSearch:true});
         })
     );
 });
